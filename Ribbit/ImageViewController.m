@@ -1,11 +1,12 @@
 //
 //  ImageViewController.m
-//  Ribbit
+//  GuessWho
 //
-//  Copyright (c) 2013 Treehouse. All rights reserved.
+//  Copyright (c) 2013 GuessWho. All rights reserved.
 //
 
 #import "ImageViewController.h"
+#import "GuessFriendViewController.h"
 
 @interface ImageViewController ()
 
@@ -38,6 +39,15 @@
 //        NSLog(@"Error: selector missing!");
 //    }
 //}
+
+// Passing the sender name to guessFriendViewController
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"showGuessFriend"]) {
+        GuessFriendViewController *viewController = (GuessFriendViewController *)segue.destinationViewController;
+        NSString *senderName = [self.message objectForKey:@"senderName"];
+        viewController.senderName = senderName;
+    }
+}
 
 #pragma mark - Helper methods
 

@@ -1,10 +1,11 @@
 //
 //  AppDelegate.h
-//  Ribbit
+//  GuessWho
 //
-//  Created by Ben Jakuben on 7/29/13.
+//  Created by Edward Lando on 8/10/13.
 //  Copyright (c) 2013 Treehouse. All rights reserved.
 //
+
 
 #import <UIKit/UIKit.h>
 

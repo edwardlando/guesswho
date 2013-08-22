@@ -1,8 +1,8 @@
 //
 //  InboxViewController.m
-//  Ribbit
+//  GuessWho
 //
-//  Copyright (c) 2013 Treehouse. All rights reserved.
+//  Copyright (c) 2013 GuessWho. All rights reserved.
 //
 
 #import "InboxViewController.h"
@@ -68,7 +68,8 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     PFObject *message = [self.messages objectAtIndex:indexPath.row];
-    cell.textLabel.text = [message objectForKey:@"senderName"];
+    //cell.textLabel.text = [message objectForKey:@"senderName"];
+    cell.textLabel.text = @"?";
     
     NSString *fileType = [message objectForKey:@"fileType"];
     if ([fileType isEqualToString:@"image"]) {
@@ -104,19 +105,19 @@
     }
     
     // Delete it!
-    NSMutableArray *recipientIds = [NSMutableArray arrayWithArray:[self.selectedMessage objectForKey:@"recipientIds"]];
-    NSLog(@"Recipients: %@", recipientIds);
-    
-    if ([recipientIds count] == 1) {
-        // Last recipient - delete!
-        [self.selectedMessage deleteInBackground];
-    }
-    else {
-        // Remove the recipient and save
-        [recipientIds removeObject:[[PFUser currentUser] objectId]];
-        [self.selectedMessage setObject:recipientIds forKey:@"recipientIds"];
-        [self.selectedMessage saveInBackground];
-    }
+//    NSMutableArray *recipientIds = [NSMutableArray arrayWithArray:[self.selectedMessage objectForKey:@"recipientIds"]];
+//    NSLog(@"Recipients: %@", recipientIds);
+//    
+//    if ([recipientIds count] == 1) {
+//        // Last recipient - delete!
+//        [self.selectedMessage deleteInBackground];
+//    }
+//    else {
+//        // Remove the recipient and save
+//        [recipientIds removeObject:[[PFUser currentUser] objectId]];
+//        [self.selectedMessage setObject:recipientIds forKey:@"recipientIds"];
+//        [self.selectedMessage saveInBackground];
+//    }
 
 }
 

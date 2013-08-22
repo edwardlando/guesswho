@@ -2,7 +2,7 @@
 //  EditFriendsViewController.m
 //  GuessWho
 //
-//  Copyright (c) 2013 Edward Lando. All rights reserved.
+//  Copyright (c) 2013 GuessWho. All rights reserved.
 //
 
 #import "EditFriendsViewController.h"

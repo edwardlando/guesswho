@@ -1,8 +1,8 @@
 //
 //  CameraViewController.m
-//  Ribbit
+//  GuessWho
 //
-//  Copyright (c) 2013 Treehouse. All rights reserved.
+//  Copyright (c) 2013 GuessWho. All rights reserved.
 //
 
 #import "CameraViewController.h"
@@ -190,7 +190,7 @@
             [alertView show];
         }
         else {
-            PFObject *message = [PFObject objectWithClassName:@"Messages"];
+            PFObject *message = [PFObject objectWithClassName:@"Message"];
             [message setObject:file forKey:@"file"];
             [message setObject:fileType forKey:@"fileType"];
             [message setObject:self.recipients forKey:@"recipientIds"];            [message setObject:[[PFUser currentUser] objectId] forKey:@"senderId"];

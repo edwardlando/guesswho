@@ -1,8 +1,8 @@
 //
 //  EditFriendsViewController.h
-//  Ribbit
+//  GuessWho
 //
-//  Copyright (c) 2013 Treehouse. All rights reserved.
+//  Copyright (c) 2013 GuessWho. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
