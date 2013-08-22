@@ -1,8 +1,8 @@
 //
 //  EditFriendsViewController.m
-//  Ribbit
+//  GuessWho
 //
-//  Copyright (c) 2013 Treehouse. All rights reserved.
+//  Copyright (c) 2013 Edward Lando. All rights reserved.
 //
 
 #import "EditFriendsViewController.h"
