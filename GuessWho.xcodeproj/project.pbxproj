@@ -129,7 +129,7 @@
 			children = (
 				8DCDADD617A6BC26008AAA28 /* Images */,
 				8DCDADC817A6BA34008AAA28 /* MainStoryboard.storyboard */,
-				8DCDADB117A6B3CC008AAA28 /* Ribbit */,
+				8DCDADB117A6B3CC008AAA28 /* GuessWho */,
 				8DCDADAA17A6B3CC008AAA28 /* Frameworks */,
 				8DCDADA917A6B3CC008AAA28 /* Products */,
 			);
@@ -164,7 +164,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		8DCDADB117A6B3CC008AAA28 /* Ribbit */ = {
+		8DCDADB117A6B3CC008AAA28 /* GuessWho */ = {
 			isa = PBXGroup;
 			children = (
 				8DCDADBA17A6B3CC008AAA28 /* AppDelegate.h */,
@@ -185,6 +185,7 @@
 				8DCDADEF17A82EC7008AAA28 /* SignupViewController.m */,
 				8DCDADB217A6B3CC008AAA28 /* Supporting Files */,
 			);
+			name = GuessWho;
 			path = Ribbit;
 			sourceTree = "<group>";
 		};
