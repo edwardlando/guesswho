@@ -90,6 +90,20 @@
     NSString *fileType = [self.selectedMessage objectForKey:@"fileType"];
     if ([fileType isEqualToString:@"image"]) {
         [self performSegueWithIdentifier:@"showImage" sender:self];
+        
+        // Message status
+        NSMutableDictionary *messageStatus = [self.selectedMessage objectForKey:@"messageStatus"];
+        PFUser *currentUser = [PFUser currentUser];
+        
+        if (messageStatus == nil) {
+            messageStatus = [NSMutableDictionary new];
+        }
+        
+        [messageStatus setObject:@"read" forKey:currentUser.objectId];
+        [self.selectedMessage setObject:messageStatus forKey:@"messageStatus"]; // Message status
+        [self.selectedMessage saveInBackground];
+
+        
     }
     else {
         // File type is video

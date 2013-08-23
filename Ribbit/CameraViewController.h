@@ -16,6 +16,7 @@
 @property (nonatomic, strong) NSArray *friends;
 @property (nonatomic, strong) PFRelation *friendsRelation;
 @property (nonatomic, strong) NSMutableArray *recipients;
+@property (nonatomic, strong) NSMutableDictionary *messageStatus; // Message status maps from users to status
 
 - (IBAction)cancel:(id)sender;
 - (IBAction)send:(id)sender;

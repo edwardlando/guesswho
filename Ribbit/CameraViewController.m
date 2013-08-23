@@ -19,6 +19,7 @@
     [super viewDidLoad];
     self.friendsRelation = [[PFUser currentUser] objectForKey:@"friendsRelation"];
     self.recipients = [[NSMutableArray alloc] init];
+    self.messageStatus = [[NSMutableDictionary alloc] init];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -99,12 +100,13 @@
     if (cell.accessoryType == UITableViewCellAccessoryNone) {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
         [self.recipients addObject:user.objectId];
+        [self.messageStatus setValue:@"unread" forKey:user.objectId];
     }
     else {
         cell.accessoryType = UITableViewCellAccessoryNone;
         [self.recipients removeObject:user.objectId];
     }
-
+    
     NSLog(@"%@", self.recipients);
 }
 
@@ -193,7 +195,9 @@
             PFObject *message = [PFObject objectWithClassName:@"Message"];
             [message setObject:file forKey:@"file"];
             [message setObject:fileType forKey:@"fileType"];
-            [message setObject:self.recipients forKey:@"recipientIds"];            [message setObject:[[PFUser currentUser] objectId] forKey:@"senderId"];
+            [message setObject:self.recipients forKey:@"recipientIds"];
+            [message setObject:self.messageStatus forKey:@"messageStatus"]; // Message status
+            [message setObject:[[PFUser currentUser] objectId] forKey:@"senderId"];
             [message setObject:[[PFUser currentUser] username] forKey:@"senderName"];
             [message saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (error) {
