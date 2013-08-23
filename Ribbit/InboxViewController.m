@@ -7,6 +7,7 @@
 
 #import "InboxViewController.h"
 #import "ImageViewController.h"
+#import "Utility.h"
 
 @interface InboxViewController ()
 
@@ -69,22 +70,7 @@
     
     PFObject *message = [self.messages objectAtIndex:indexPath.row];
     
-    // Message status
-    NSMutableDictionary *messageStatus = [message objectForKey:@"messageStatus"];
-    PFUser *currentUser = [PFUser currentUser];
-    
-    // If guessedRight show name
-    if ([[messageStatus valueForKey:currentUser.objectId ] isEqualToString:@"guessedRight"]) {
-        cell.textLabel.text = [message objectForKey:@"senderName"]; // Need to make it for unique message
-    }
-    // If guessedWrong show X
-    else if ([[messageStatus valueForKey:currentUser.objectId ] isEqualToString:@"guessedWrong"]) {
-        cell.textLabel.text = @"X";
-    }
-    // If unread show ?
-    else {
-        cell.textLabel.text = @"?";
-    }
+    cell.textLabel.text = [Utility setMessageSender:message]; //setting message sender
     
     NSString *fileType = [message objectForKey:@"fileType"];
     if ([fileType isEqualToString:@"image"]) {

@@ -46,6 +46,7 @@
 		8DCDAE0117A83870008AAA28 /* inbox.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DCDADFB17A83870008AAA28 /* inbox.png */; };
 		8DCDAE0217A83870008AAA28 /* inbox@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DCDADFC17A83870008AAA28 /* inbox@2x.png */; };
 		BC720ECF17C68FE50098FA44 /* GuessFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC720ECE17C68FE50098FA44 /* GuessFriendViewController.m */; };
+		BCD883B917C8212E00C25088 /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD883B817C8212E00C25088 /* Utility.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -100,6 +101,8 @@
 		8DCDADFC17A83870008AAA28 /* inbox@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "inbox@2x.png"; path = "Images/inbox@2x.png"; sourceTree = "<group>"; };
 		BC720ECD17C68FE50098FA44 /* GuessFriendViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GuessFriendViewController.h; path = ../GuessFriendViewController.h; sourceTree = "<group>"; };
 		BC720ECE17C68FE50098FA44 /* GuessFriendViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GuessFriendViewController.m; path = ../GuessFriendViewController.m; sourceTree = "<group>"; };
+		BCD883B717C8212E00C25088 /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utility.h; sourceTree = "<group>"; };
+		BCD883B817C8212E00C25088 /* Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utility.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -182,6 +185,8 @@
 				8D5ED98217B052200079548F /* ImageViewController.m */,
 				8DCDADF417A83852008AAA28 /* InboxViewController.h */,
 				8DCDADF517A83852008AAA28 /* InboxViewController.m */,
+				BCD883B717C8212E00C25088 /* Utility.h */,
+				BCD883B817C8212E00C25088 /* Utility.m */,
 				8DCDADF117A82EEB008AAA28 /* LoginViewController.h */,
 				8DCDADF217A82EEB008AAA28 /* LoginViewController.m */,
 				8DCDADEE17A82EC7008AAA28 /* SignupViewController.h */,
@@ -311,6 +316,7 @@
 				8D5ED96317AFFE300079548F /* CameraViewController.m in Sources */,
 				8D5ED98317B052200079548F /* ImageViewController.m in Sources */,
 				BC720ECF17C68FE50098FA44 /* GuessFriendViewController.m in Sources */,
+				BCD883B917C8212E00C25088 /* Utility.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
