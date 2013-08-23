@@ -45,7 +45,8 @@
     if ([segue.identifier isEqualToString:@"showGuessFriend"]) {
         GuessFriendViewController *viewController = (GuessFriendViewController *)segue.destinationViewController;
         NSString *senderName = [self.message objectForKey:@"senderName"];
-        viewController.senderName = senderName;
+        viewController.senderName = senderName; // Need access to the sender name in GuessFriendView
+        viewController.message = self.message; // Also need access to the message
     }
 }
 

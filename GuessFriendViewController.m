@@ -70,12 +70,17 @@
 //    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
     PFUser *user = [self.friends objectAtIndex:indexPath.row];
     
+    // Message status
+    NSMutableDictionary *messageStatus = [self.message objectForKey:@"messageStatus"];
+    PFUser *currentUser = [PFUser currentUser];
     
+    // Guessed right
     if ([user.username isEqualToString:self.senderName]) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Yay!"
                                                             message:@"You guessed right!"
                                                            delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alertView show];
+        [messageStatus setObject:@"guessedRight" forKey:currentUser.objectId];
         // TO DO should also now show the name of the sender in the inbox
  
     } 
@@ -86,9 +91,14 @@
                                                             message:@"Nope, that's not it. Someone else sent you this!"
                                                            delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alertView show];
+        [messageStatus setObject:@"guessedWrong" forKey:currentUser.objectId];
 
     }
-        
+    
+    [self.message setObject:messageStatus forKey:@"messageStatus"]; // Message status
+    [self.message saveInBackground];
+    
+    
         
     
 

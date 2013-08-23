@@ -68,8 +68,23 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     PFObject *message = [self.messages objectAtIndex:indexPath.row];
-    //cell.textLabel.text = [message objectForKey:@"senderName"];
-    cell.textLabel.text = @"?";
+    
+    // Message status
+    NSMutableDictionary *messageStatus = [message objectForKey:@"messageStatus"];
+    PFUser *currentUser = [PFUser currentUser];
+    
+    // If guessedRight show name
+    if ([[messageStatus valueForKey:currentUser.objectId ] isEqualToString:@"guessedRight"]) {
+        cell.textLabel.text = [message objectForKey:@"senderName"]; // Need to make it for unique message
+    }
+    // If guessedWrong show X
+    else if ([[messageStatus valueForKey:currentUser.objectId ] isEqualToString:@"guessedWrong"]) {
+        cell.textLabel.text = @"X";
+    }
+    // If unread show ?
+    else {
+        cell.textLabel.text = @"?";
+    }
     
     NSString *fileType = [message objectForKey:@"fileType"];
     if ([fileType isEqualToString:@"image"]) {
@@ -95,12 +110,17 @@
         NSMutableDictionary *messageStatus = [self.selectedMessage objectForKey:@"messageStatus"];
         PFUser *currentUser = [PFUser currentUser];
         
+        // Could probably remove this check
         if (messageStatus == nil) {
             messageStatus = [NSMutableDictionary new];
         }
         
-        [messageStatus setObject:@"read" forKey:currentUser.objectId];
-        [self.selectedMessage setObject:messageStatus forKey:@"messageStatus"]; // Message status
+        // If unread mark read
+        if ([[messageStatus valueForKey:currentUser.objectId ] isEqualToString:@"unread"]) {
+            [messageStatus setObject:@"read" forKey:currentUser.objectId];
+        }
+        
+        [self.selectedMessage setObject:messageStatus forKey:@"messageStatus"]; 
         [self.selectedMessage saveInBackground];
 
         
@@ -118,7 +138,7 @@
         [self.moviePlayer setFullscreen:YES animated:YES];
     }
     
-    // Delete it!
+// Delete it!
 //    NSMutableArray *recipientIds = [NSMutableArray arrayWithArray:[self.selectedMessage objectForKey:@"recipientIds"]];
 //    NSLog(@"Recipients: %@", recipientIds);
 //    
