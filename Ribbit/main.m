@@ -1,9 +1,9 @@
 //
 //  main.m
-//  Ribbit
+//  GuessWho
 //
-//  Created by Ben Jakuben on 7/29/13.
-//  Copyright (c) 2013 Treehouse. All rights reserved.
+//  Created by Edward Lando on 7/29/13.
+//  Copyright (c) 2013 GuessWho. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

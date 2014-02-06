@@ -3,7 +3,7 @@
 //  GuessWho
 //
 //  Created by Edward Lando on 8/22/13.
-//  Copyright (c) 2013 Treehouse. All rights reserved.
+//  Copyright (c) 2013 GuessWho. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

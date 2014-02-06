@@ -3,7 +3,7 @@
 //  GuessWho
 //
 //  Created by Edward Lando on 8/22/13.
-//  Copyright (c) 2013 Treehouse. All rights reserved.
+//  Copyright (c) 2013 GuessWho. All rights reserved.
 //
 
 #import "GuessFriendViewController.h"
@@ -55,9 +55,19 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     PFUser *user = [self.friends objectAtIndex:indexPath.row];
+    
     cell.textLabel.text = user.username;
+    
+    NSMutableDictionary *messageStatus = [self.message objectForKey:@"messageStatus"];
+    
+    // Make unclickable if have already guessed
+    if (![[messageStatus valueForKey:user.objectId ] isEqualToString:@"read"]) {
+        cell.userInteractionEnabled = NO;
+    }
+    
         
     return cell;
+    
 }
 
 

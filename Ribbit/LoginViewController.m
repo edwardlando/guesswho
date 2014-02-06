@@ -7,7 +7,11 @@
 //
 
 #import "LoginViewController.h"
+#import "InboxViewController.h"
 #import <Parse/Parse.h>
+#import "Utility.h"
+
+
 
 @interface LoginViewController ()
 
@@ -20,10 +24,21 @@
     [super viewDidLoad];
 
     self.navigationItem.hidesBackButton = YES;
+    
+    // Facebook
+    self.title = @"Facebook Profile";
+    // Check if user is cached and linked to Facebook, if so, bypass login
+    if ([PFUser currentUser] && [PFFacebookUtils isLinkedWithUser:[PFUser currentUser]]) {
+        [self.navigationController pushViewController:[[InboxViewController alloc] initWithStyle:UITableViewStyleGrouped] animated:NO];
+    }
 }
 
 
+
+
+// Regular login
 - (IBAction)login:(id)sender {
+    
     NSString *username = [self.usernameField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     NSString *password = [self.passwordField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
@@ -48,5 +63,43 @@
         }];
     }
 }
+
+/* Login to facebook method */
+- (IBAction)loginButtonTouchHandler:(id)sender  {
+    [Utility loginWithFacebook:^(BOOL success, NSError* error) {
+        [_activityIndicator stopAnimating]; // Hide loading indicator
+        
+        PFUser *user = [PFUser currentUser];
+        
+        if (!user) {
+            if (!error) {    
+                
+            }
+            else {
+                
+            }
+        } else if (user.isNew) {
+            
+            [self.navigationController popToRootViewControllerAnimated:YES];
+        } else {
+            
+            
+            
+            NSLog(@"User with facebook logged in!");
+            [self.navigationController popToRootViewControllerAnimated:YES];
+            
+            
+            
+        }
+        
+        
+    }];
+    
+    [_activityIndicator startAnimating]; // Show loading indicator until login is finished
+    
+    
+}
+
+
 
 @end

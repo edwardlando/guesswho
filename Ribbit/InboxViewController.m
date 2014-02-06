@@ -6,7 +6,7 @@
 //
 
 #import "InboxViewController.h"
-#import "ImageViewController.h"
+#import "PostViewController.h"
 #import "Utility.h"
 
 @interface InboxViewController ()
@@ -19,8 +19,6 @@
 {
     [super viewDidLoad];
 
-    self.moviePlayer = [[MPMoviePlayerController alloc] init];
-    
     PFUser *currentUser = [PFUser currentUser];
     if (currentUser) {
         NSLog(@"Current user: %@", currentUser.username);
@@ -32,19 +30,24 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self refreshTokenIfNeeded];
     
-    PFQuery *query = [PFQuery queryWithClassName:@"Message"];
-    [query whereKey:@"recipientIds" equalTo:[[PFUser currentUser] objectId]];
-    [query orderByDescending:@"createdAt"];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (error) {
-            NSLog(@"Error: %@ %@", error, [error userInfo]);
-        }
-        else {
-            // We found messages!
-            self.messages = objects;
-            [self.tableView reloadData];
-            NSLog(@"Retrieved %d messages", [self.messages count]);
+   }
+
+- (void) refreshTokenIfNeeded {
+    FBRequest *request = [FBRequest requestForMe];
+    [request startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        if (!error) {
+            // handle successful response
+            [self queryPosts];
+        } else if ([error.userInfo[FBErrorParsedJSONResponseKey][@"body"][@"error"][@"type"] isEqualToString:@"OAuthException"]) { // Since the request failed, we can check if it was due to an invalid session
+            NSLog(@"The Facebook session was invalidated");
+            [PFUser logOut];
+            [self refreshTokenIfNeeded];
+            
+            
+        } else {
+            NSLog(@"Some other error: %@", error);
         }
     }];
 }
@@ -60,7 +63,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [self.messages count];
+    return [self.posts count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -68,77 +71,72 @@
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
-    PFObject *message = [self.messages objectAtIndex:indexPath.row];
+    PFObject *post = [self.posts objectAtIndex:indexPath.row];
     
-    cell.textLabel.text = [Utility setMessageSender:message]; //setting message sender
-    
-    NSString *fileType = [message objectForKey:@"fileType"];
-    if ([fileType isEqualToString:@"image"]) {
-        cell.imageView.image = [UIImage imageNamed:@"icon_image"];
-    }
-    else {
-        cell.imageView.image = [UIImage imageNamed:@"icon_video"];
-    }
+    cell.textLabel.text = [post objectForKey:@"authorName"]; 
     
     return cell;
 }
+
+- (void) queryPosts {
+    PFQuery *query = [PFQuery queryWithClassName:@"Post"];
+    // get following and the all their posts
+    // [query whereKey:@"recipientIds" equalTo:[[PFUser currentUser] objectId]];
+    [query orderByDescending:@"createdAt"];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (error) {
+            NSLog(@"Error: %@ %@", error, [error userInfo]);
+        }
+        else {
+            // We found posts!
+            self.posts = objects;
+            [self.tableView reloadData];
+            NSLog(@"Retrieved %d messages", [self.posts count]);
+        }
+    }];
+
+}
+
+
+- (PFQuery *)queryForTable {
+    // Query for the friends the current user is following
+    PFQuery *followingActivitiesQuery = [PFQuery queryWithClassName:@"Activity"];
+    [followingActivitiesQuery whereKey:@"Activity" equalTo:@"Follow"];
+    [followingActivitiesQuery whereKey:@"ActivityFromUser" equalTo:[PFUser currentUser]];
+    
+    // Using the activities from the query above, we find all of the posts written by
+    // the friends the current user is following
+    PFQuery *postsFromFollowedUsersQuery = [PFQuery queryWithClassName:@"Posts"];
+    [postsFromFollowedUsersQuery whereKey:@"PostAuthor" matchesKey:@"ActivityToUser" inQuery:followingActivitiesQuery];
+    [postsFromFollowedUsersQuery whereKeyExists:@"Post"];
+    
+    // We create a second query for the current user's posts
+    PFQuery *postsFromCurrentUserQuery = [PFQuery queryWithClassName:@"Posts"];
+    [postsFromCurrentUserQuery whereKey:@"PostAuthor" equalTo:[PFUser currentUser]];
+    [postsFromCurrentUserQuery whereKeyExists:@"Post"];
+    
+    // We create a final compound query that will find all of the posts that were
+    // written by the user's friends or by the user
+    PFQuery *query = [PFQuery orQueryWithSubqueries:[NSArray arrayWithObjects:postsFromFollowedUsersQuery, postsFromCurrentUserQuery, nil]];
+    [query includeKey:@"PostAuthor"];
+    [query orderByDescending:@"createdAt"];
+    return query;
+}
+
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    self.selectedMessage = [self.messages objectAtIndex:indexPath.row];
-    NSString *fileType = [self.selectedMessage objectForKey:@"fileType"];
-    if ([fileType isEqualToString:@"image"]) {
-        [self performSegueWithIdentifier:@"showImage" sender:self];
+    self.selectedPost = [self.posts objectAtIndex:indexPath.row];
+  
+    [self performSegueWithIdentifier:@"showPost" sender:self];
         
         // Message status
-        NSMutableDictionary *messageStatus = [self.selectedMessage objectForKey:@"messageStatus"];
+        NSMutableDictionary *messageStatus = [self.selectedPost objectForKey:@"messageStatus"];
         PFUser *currentUser = [PFUser currentUser];
-        
-        // Could probably remove this check
-        if (messageStatus == nil) {
-            messageStatus = [NSMutableDictionary new];
-        }
-        
-        // If unread mark read
-        if ([[messageStatus valueForKey:currentUser.objectId ] isEqualToString:@"unread"]) {
-            [messageStatus setObject:@"read" forKey:currentUser.objectId];
-        }
-        
-        [self.selectedMessage setObject:messageStatus forKey:@"messageStatus"]; 
-        [self.selectedMessage saveInBackground];
-
-        
-    }
-    else {
-        // File type is video
-        PFFile *videoFile = [self.selectedMessage objectForKey:@"file"];
-        NSURL *fileUrl = [NSURL URLWithString:videoFile.url];
-        self.moviePlayer.contentURL = fileUrl;
-        [self.moviePlayer prepareToPlay];
-        [self.moviePlayer thumbnailImageAtTime:0 timeOption:MPMovieTimeOptionNearestKeyFrame];
-        
-        // Add it to the view controller so we can see it
-        [self.view addSubview:self.moviePlayer.view];
-        [self.moviePlayer setFullscreen:YES animated:YES];
-    }
     
-// Delete it!
-//    NSMutableArray *recipientIds = [NSMutableArray arrayWithArray:[self.selectedMessage objectForKey:@"recipientIds"]];
-//    NSLog(@"Recipients: %@", recipientIds);
-//    
-//    if ([recipientIds count] == 1) {
-//        // Last recipient - delete!
-//        [self.selectedMessage deleteInBackground];
-//    }
-//    else {
-//        // Remove the recipient and save
-//        [recipientIds removeObject:[[PFUser currentUser] objectId]];
-//        [self.selectedMessage setObject:recipientIds forKey:@"recipientIds"];
-//        [self.selectedMessage saveInBackground];
-//    }
-
+        [self.selectedPost saveInBackground];
 }
 
 - (IBAction)logout:(id)sender {
@@ -150,10 +148,10 @@
     if ([segue.identifier isEqualToString:@"showLogin"]) {
         [segue.destinationViewController setHidesBottomBarWhenPushed:YES];
     }
-    else if ([segue.identifier isEqualToString:@"showImage"]) {
+    else if ([segue.identifier isEqualToString:@"showPost"]) { // used to be showImage
         [segue.destinationViewController setHidesBottomBarWhenPushed:YES];
-        ImageViewController *imageViewController = (ImageViewController *)segue.destinationViewController;
-        imageViewController.message = self.selectedMessage;
+        PostViewController *postViewController = (PostViewController *)segue.destinationViewController;
+        postViewController.text = self.selectedPost;
     }
 }
 

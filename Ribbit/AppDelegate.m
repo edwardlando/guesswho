@@ -14,7 +14,15 @@
 {
     [Parse setApplicationId:@"l3qpTBHwwTvFKgVDasKas9jlombrq5WLYWtbaioJ"
                   clientKey:@"PUkd5seqoQhwo4HwTL2ixIAA3eaQ7nAQdLUs1MYt"];
+    [PFFacebookUtils initializeFacebook];
     return YES;
+}
+
+
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    return [PFFacebookUtils handleOpenURL:url];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

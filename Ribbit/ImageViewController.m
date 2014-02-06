@@ -7,6 +7,7 @@
 
 #import "ImageViewController.h"
 #import "GuessFriendViewController.h"
+#import "Utility.h"
 
 @interface ImageViewController ()
 
@@ -23,10 +24,13 @@
     NSData *imageData = [NSData dataWithContentsOfURL:imageFileUrl];
     self.imageView.image = [UIImage imageWithData:imageData];
     
-//    NSString *senderName = [self.message objectForKey:@"senderName"];
-//    NSString *title = [NSString stringWithFormat:@"Sent from %@", senderName];
-//    self.navigationItem.title = title;
-    self.navigationItem.title = @"Message from ?";
+    // Setting title
+    NSString *title = [NSString stringWithFormat:@"From %@",[Utility setMessageSender:self.message]];
+    self.navigationItem.title = title;
+    
+    // Enable or disable Guess Who button here
+    
+    
 }
 
 //- (void)viewDidAppear:(BOOL)animated {
@@ -55,5 +59,7 @@
 - (void)timeout {
     [self.navigationController popViewControllerAnimated:YES];
 }
+
+
 
 @end
